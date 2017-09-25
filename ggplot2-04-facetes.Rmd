@@ -65,7 +65,9 @@ Užduotys: facetės
 1. Kas nutinka, jei facetes kuriame pagal tolydųjį kintamąjį?
 
 ```{r}
-
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ year, nrow = 2)
 ```
 
 2. Ką rodo tušti langeliai įvykdžius funkciją `facet_grid(drv ~ cyl)`? Kaip jie susiję su šiuo grafiku: 
@@ -105,16 +107,16 @@ ggplot(data = mpg) +
 Spalvomis išdėstykite klasių pavadinimus
 ```{r}
 ggplot(data = mpg) + 
-    geom_point(mapping = aes(x = displ, y = hwy, color =  )) + 
+    geom_point(mapping = aes(x = displ, y = hwy, color = class )) + 
     facet_wrap(~ class, nrow = 2) 
 ```
 
 
 5. Perskaitykite funkcijos aprašymą: `?facet_wrap`.
-    a. Kokią funkciją atlieka `nrow`? 
-    b. Kokią funkciją atlieka `ncol`? 
+    a. Kokią funkciją atlieka `nrow`? nusako eiluciu sk
+    b. Kokią funkciją atlieka `ncol`? nusako stulpeliu sk
     c. Kurios kitos funkcijos kontroliuoja facečių išdėstymą? 
-    d. Kodėl funkcija `facet_grid()` neturi parametrų `nrow` ir `ncol`?
+    d. Kodėl funkcija `facet_grid()` neturi parametrų `nrow` ir `ncol`? nes isdestoma gaal tai kiek reik6mi7
 
 
 

@@ -128,19 +128,25 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
 ```
 
 3. Viename iš šio skyriaus grafikų buvo panaudotas argumentas `show.legend = FALSE`. Ką jis daro? Kas įvyksta jį pašalinus? Kodėl jis buvo naudotas ankstesniuose pavyzdžiuose?
-
+pasalina legenda, jei istrini, atsiranda legenda
 ```{r}
-
+ggplot(data = mpg) +
+  geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv),
+    show.legend = FALSE
+  )
 ```
 
 4. Ką atlieka `se` argumentas funkcijoje `geom_smooth()`?
-
+pasalina kazkokia pilka deme
 ```{r}
-
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+	geom_point(mapping = aes(color = class)) + 
+	geom_smooth(data = filter(mpg, class == "subcompact"), se = FALSE) 
 ```
 
 5. Ar šie 2 grafikai atrodys skirtingai? Kodėl?
-
+taip, nes vinu atveju bus vienas grafikas, o kitu du?
 ```{r eval=FALSE, include=FALSE}
 # Grafikas 1
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
@@ -163,12 +169,18 @@ knitr::include_graphics("parasykite-koda-grafikams.png")
 
 ```{r}
 # Grafikas 1
-
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
+	geom_point() + 
+	geom_smooth(data = filter(mpg, class == "subcompact"), se = FALSE)
 ```
 
 ```{r}
 # Grafikas 2
-
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) 
+  + geom_smooth(
+    mapping = aes(x = displ, y = hwy, color = drv),
+    show.legend = FALSE
+  )
 ```
 
 ```{r}
