@@ -1,0 +1,220 @@
+---
+title: "Sistemos ggplot2 pagrindai"
+subtitle: "Koordinačių sistemos ir temos elementai"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+```{r setup}
+library(tidyverse)
+
+knitr::opts_chunk$set(fig.height = 3, fig.width = 6)
+
+Sys.setlocale(locale = "Lithuanian")
+```
+
+
+Koordinačių sistemos
+============================================================================= 
+
+coord_flip()
+----------------------------------------------------------------------------- 
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot()
+```
+  
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy)) + 
+  geom_boxplot() +
+  coord_flip()
+
+```
+
+coord_quickmap()
+----------------------------------------------------------------------------- 
+
+```{r}
+nz <- map_data("nz")
+
+ggplot(nz, aes(long, lat, group = group)) +
+  geom_polygon(fill = "white", colour = "black")
+
+ggplot(nz, aes(long, lat, group = group)) +
+  geom_polygon(fill = "white", colour = "black") +
+  coord_quickmap()
+```
+
+coord_polar()
+----------------------------------------------------------------------------- 
+
+```{r}
+bar <- ggplot(data = diamonds) + 
+  geom_bar(
+    mapping = aes(x = cut, fill = cut), 
+    show.legend = FALSE,
+    width = 1
+  ) + 
+  theme(aspect.ratio = 1) +
+  labs(x = NULL, y = NULL)
+
+bar + coord_flip()
+bar + coord_polar()
+```
+
+ggolot2 „Cheat Sheet“
+----------------------------------------------------------------------------- 
+```{r}
+d <- ggplot(mpg, aes(fl))
+r <- d + geom_bar()
+```
+```{r}
+r + coord_cartesian(xlim = c(0, 5))
+r + coord_fixed(ratio = 1/30)
+r + coord_flip()
+r + coord_polar(theta = "x", direction = 1)
+```
+
+```{r, error=TRUE}
+r + coord_trans(ytrans = "sqrt")
+```
+
+```{r}
+r + coord_trans(y = "sqrt")
+```
+
+
+Priartinimas: atsargiai, apkarpymas
+----------------------------------------------------------------------------- 
+
+```{r}
+
+df <- data.frame(x = 1:11, y = c(1:5,10,5:1))
+
+gg1 <- 
+    ggplot(df, aes(x, y)) + 
+    geom_line() +
+    geom_point()
+
+```
+
+
+```{r}
+gg1
+```
+
+```{r}
+gg1 + ylim(0, 6)
+```
+
+```{r}
+gg1 + coord_cartesian(ylim = c(0, 6))
+```
+
+
+
+
+Užduotys: koordinačių sistemos
+----------------------------------------------------------------------------- 
+
+1. Duotas kodas, kuris braižo grafiką. Kodėl jame reikalingas elementas `coord_fixed()`? Ką atlieka `geom_abline()`?
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+  geom_point() + 
+  geom_abline() +
+  coord_fixed()
+```
+
+
+Temos elementai
+=============================================================================
+
+Visos temos pasirinkimas
+----------------------------------------------------------------------------- 
+
+```{r}
+d <- ggplot(mpg, aes(fl))
+r <- d + geom_bar()
+```
+```{r}
+r + theme_bw()
+```
+```{r}
+r + theme_dark()
+```
+```{r}
+r + theme_classic()
+r + theme_light()
+r + theme_linedraw()
+r + theme_minimal()
+r + theme_void()
+r + theme_dark()
+r + theme_gray()
+r + theme_bw()
+```
+
+
+
+
+Antraštės (1): ggtitle(), xlab(), ylab()
+----------------------------------------------------------------------------- 
+```{r}
+t <- ggplot()
+```
+```{r}
+t + ggtitle("Paveikslo pavadinimas")
+t + ggtitle(label = "Paveikslo pavadinimas", 
+            subtitle = "Paantraštė")
+t + xlab("x text")
+t + ylab("y text")
+```
+
+
+Antraštės (2): labs()
+----------------------------------------------------------------------------- 
+```{r}
+t + labs(x = " X ašies pavadinimas", 
+         y = " Y ašies pavadinimas ",
+         title =  "Paveikslo pavadinimas (viršuje)", 
+         subtitle = "Paantraštė (apačioje)",
+         caption = "Paveikslo aprašymas (apačioje)") 
+
+```
+
+
+Antraštės (3): legendų pavadinimai
+----------------------------------------------------------------------------- 
+```{r}
+r2 <- 
+    ggplot(mpg, aes(cty, hwy)) +
+    geom_jitter(aes(color = drv, fill = drv)) 
+```
+
+```{r}
+r2
+```
+
+```{r}
+r2 + labs(fill = "Varomi ratai")
+```
+
+```{r}
+r2 + labs(fill = "Varomi ratai", color = "Varomi ratai")
+```
+
+
+
+Užduotys: temos elementai
+----------------------------------------------------------------------------- 
+
+1. Ką daro funkcija `labs()`? Peržiūrėkite dokumentaciją ir išbandykite pavyzdžius.
+2. Ką daro funkcija `theme()`? Peržiūrėkite dokumentaciją ir išbandykite pavyzdžius, kuriuose naudojamas objektas `p1`.
+3. Ką daro funkcija `theme_set()`? Peržiūrėkite dokumentaciją ir išbandykite pavyzdžius.
+4. Ką atlieka funkcijos `labs()` parametrai `x`, `y`, `title`, `subtitle`, `caption`. Išbandykite kiekvieną atskirai.
+
+
+

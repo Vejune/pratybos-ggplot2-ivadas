@@ -1,0 +1,247 @@
+---
+title: "Sistemos ggplot2 pagrindai"
+subtitle: "Statistinės transformacijos"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+```{r setup}
+library(tidyverse)
+
+knitr::opts_chunk$set(fig.height = 3, fig.width = 6)
+
+Sys.setlocale(locale = "Lithuanian")
+```
+
+Grafikų elementų sluoksniai (ggplot2)
+============================================================================= 
+
+ggplot2 elementų sluoksnai
+----------------------------------------------------------------------------- 
+
+```{r}
+ggplot(trees, aes(Girth, Volume)) +
+    geom_point(color = "limegreen", size = 2) +
+    geom_line()
+```
+
+Eilutes su geomais sukeiskite vietomis. Ką pastebite?
+```{r}
+ggplot(trees, aes(Girth, Volume)) +
+    ___ +
+    ___
+```
+
+
+Statistinės transformacijos
+============================================================================= 
+
+Duomenys: diamonds
+----------------------------------------------------------------------------- 
+```{r}
+data(diamonds)
+```
+
+Patyrinėkite duomenis
+```{r}
+head(___)
+```
+```{r}
+tail(___)
+```
+```{r}
+str(___)
+```
+```{r}
+dplyr::glimpse(___)
+```
+
+Paaiškinkite, kas nutiko?
+----------------------------------------------------------------------------- 
+
+Iš kur atsirado `y`?
+```{r}
+ggplot(data = diamonds) + 
+     geom_bar(mapping = aes(x = cut)) 
+```
+
+geom_bar(stat="count") vs. stat_count(geom="bar")
+----------------------------------------------------------------------------- 
+```{r}
+ggplot(data = diamonds) + 
+     geom_bar(mapping = aes(x = cut)) 
+```
+
+```{r}
+ggplot(data = diamonds) + 
+    stat_count(mapping = aes(x = cut)) 
+```
+
+Galime modifikuoti transformacijos geomą
+----------------------------------------------------------------------------- 
+Atvaizduokite, ne stulpeliais, o taškais.
+
+
+a. Pakeiskite geomą į `geom = "point"`
+```{r}
+ggplot(data = diamonds) + 
+    stat_count(mapping = aes(x = cut), ___) 
+```
+
+b. Turbūt jau žinote, ką daryti:
+```{r}
+ggplot(data = diamonds) + 
+    geom_...(mapping = aes(x = cut), stat = "count") 
+```
+
+Norite pakeisi numatytąją transformaciją
+----------------------------------------------------------------------------- 
+```{r}
+demo_df <- tribble(
+  ~cut,         ~freq,
+  "Fair",       1610,
+  "Good",       4906,
+  "Very Good",  12082,
+  "Premium",    13791,
+  "Ideal",      21551
+)
+```
+```{r}
+glimpse(demo_df)
+```
+```{r}
+demo_df
+```
+
+```{r}
+ggplot(data = demo) +
+  geom_bar(mapping = aes(x = cut, y = freq), stat = "identity")
+```
+
+
+```{r, error=TRUE}
+ggplot(data = demo) +
+  geom_bar(mapping = aes(x = cut, y = freq), stat = "count")
+```
+
+
+Norite pakeisti numatytąjį estetinį išdėstymą
+----------------------------------------------------------------------------- 
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop.., group = 1)) 
+```
+
+Panaikinkite `group` parametrą
+```{r}
+ggplot(data = diamonds) + 
+  ___
+```
+
+Norite pakeisti numatytąjį estetinį išdėstymą (2)
+----------------------------------------------------------------------------- 
+
+```{r}
+c <- ggplot(mpg, aes(hwy))
+```
+```{r}
+c + stat_bin(binwidth = 1)
+```
+```{r}
+c + stat_bin(binwidth = .5)
+```
+
+Išbandykite skirtingas parametro `y` reikšmes:
+
+a. `..count..`
+b. `..ncount..`
+c. `..density..`
+d. `..ndensity..`
+
+```{r}
+c + stat_bin(aes(y = ___))
+```
+```{r}
+c + stat_bin(aes(y = ___))
+```
+```{r}
+c + stat_bin(aes(y = ___))
+```
+```{r}
+c + stat_bin(aes(y = ..ndensity.., fill = ..count..))
+```
+
+Norite atkreipti dėmesį į stat. transformacijas savo kode
+----------------------------------------------------------------------------- 
+
+```{r}
+ggplot(data = diamonds) + 
+   stat_summary( 
+      mapping = aes(x = cut, y = depth),
+      fun.ymin = min, 
+      fun.ymax = max, 
+      fun.y = median,
+      color = "green3"
+   ) 
+```
+
+
+Užduotys: statistinės transformacijos
+----------------------------------------------------------------------------- 
+
+1. Koks geomas pagal nutylėjimą naudojamas funkcijoje `stat_summary()`?
+
+2. Perrašykite kodą, kad jis naudotų `geom_` funkciją vietoje `stat_` funkcijos.
+
+```{r}
+# Pradinis kodas
+ggplot(data = diamonds) + 
+   stat_summary( 
+      mapping = aes(x = cut, y = depth),
+      fun.ymin = min, 
+      fun.ymax = max, 
+      fun.y = median
+   ) 
+```
+
+```{r}
+# Pakeistas kodas
+ggplot(data = diamonds) + 
+    ___(aes(x = ___, y = ___),
+        fun.ymin = min, 
+        fun.ymax = max, 
+        fun.y = median,
+        stat = ___ )
+```
+
+
+
+3. Ką atlieka funkcija `geom_col()`? Kuo ji skiriasi nuo `geom_bar()`?
+
+
+
+
+4. Kokius papildomus kintamuosius apskaičiuoja `stat_smooth()`? Kokie parametrai kontroliuoja funkcijos elgesį?
+
+
+
+5. Santykinių dažnių stulpelinėje diagramoje dažnai reikia estetinio išdėstymo parametro, pvz., `group = 1`? Kitaip sakant, kas negerai šiems dviems grafikams? Pataisykite juos.
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, y = ..prop..))
+```
+
+```{r}
+ggplot(data = diamonds) + 
+  geom_bar(mapping = aes(x = cut, fill = color, y = ..prop..))
+```
+
+
+
+6. **(Papildoma).** Tam, kad veiktų darniai, dauguma geomų ir statistinių transformacijų yra naudojami numatytomis poromis (`geom` ir `stat`). Peržiūrėkite dokumentaciją ir sudarykite visų šių porų sąrašą. Ką jos turi bendro?
+
+
